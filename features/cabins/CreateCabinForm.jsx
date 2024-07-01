@@ -1,10 +1,14 @@
 import styled from 'styled-components';
-
-import Input from '../../ui/Input';
 import Form from '../../ui/Form';
+
+// import Input from '../../ui/Input';
 import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
+import Input from '../../ui/Input';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const FormRow = styled.div`
     display: grid;
@@ -37,47 +41,73 @@ const Label = styled.label`
     font-weight: 500;
 `;
 
-const Error = styled.span`
-    font-size: 1.4rem;
-    color: var(--color-red-700);
-`;
+// const Error = styled.span`
+//     font-size: 1.4rem;
+//     color: var(--color-red-700);
+// `;
+
+const schema = yup
+    .object({
+        name: yup.string('Name must be string').required('Name is required'),
+        maxCapacity: yup
+            .number('Max capacity must be number')
+            .positive('Max capacity must be a positive number')
+            .integer('Max capacity must be a integer number')
+            .required('Max capacity is required'),
+    })
+    .required();
 
 function CreateCabinForm() {
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm({ resolver: yupResolver(schema), mode: 'all' });
+
+    const onSubmit = (data) => console.log(data);
+
+    const resetForm = function() {
+        reset();
+    }
+
     return (
-        <Form>
+        <Form onSubmit={handleSubmit(onSubmit)}>
             <FormRow>
                 <Label htmlFor="name">Cabin name</Label>
-                <Input type="text" id="name" />
+                <Input type="text" id="name" {...register('name')}/>
+                {errors.name && <p>{errors.name.message}</p>}
             </FormRow>
 
             <FormRow>
                 <Label htmlFor="maxCapacity">Maximum capacity</Label>
-                <Input type="number" id="maxCapacity" />
+                <Input type="number" id="maxCapacity" {...register('maxCapacity')}/>
+                {errors.maxCapacity && <p>{errors.maxCapacity.message}</p>}
             </FormRow>
 
             <FormRow>
                 <Label htmlFor="regularPrice">Regular price</Label>
-                <Input type="number" id="regularPrice" />
+                <Input type="number" id="regularPrice" {...register('regularPrice')} />
             </FormRow>
 
             <FormRow>
                 <Label htmlFor="discount">Discount</Label>
-                <Input type="number" id="discount" defaultValue={0} />
+                <Input type="number" id="discount" defaultValue={0} {...register('discount')} />
             </FormRow>
 
             <FormRow>
                 <Label htmlFor="description">Description for website</Label>
-                <Textarea type="number" id="description" defaultValue="" />
+                <Textarea type="number" id="description" defaultValue="" {...register('description')} />
             </FormRow>
 
             <FormRow>
                 <Label htmlFor="image">Cabin photo</Label>
-                <FileInput id="image" accept="image/*" />
+                <FileInput id="image" accept="image/*" {...register('image')} />
             </FormRow>
 
             <FormRow>
                 {/* type is an HTML attribute! */}
-                <Button variation="secondary" type="reset">
+                <Button onClick={resetForm} variation="secondary" type="reset">
                     Cancel
                 </Button>
                 <Button>Edit cabin</Button>
@@ -86,4 +116,4 @@ function CreateCabinForm() {
     );
 }
 
-export default CreateCabinForm;
+export default CreateCabinForm

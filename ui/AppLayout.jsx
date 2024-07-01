@@ -15,14 +15,21 @@ const Main = styled.main`
     padding: 4rem 4.8rem 6.4rem;
 `
 
+const Container = styled.div`
+    max-width: 120rem;
+    margin: 0 auto;
+`
+
 const AppLayout = () => {
     return (
         <StyledAppLayout>
             <Header/>
             <Sidebar/>
             <Main>
-                <BreadCrumbs/>
-                <Outlet/>
+                <Container>
+                    <BreadCrumbs/>
+                    <Outlet/>
+                </Container>
             </Main>
         </StyledAppLayout>
     );

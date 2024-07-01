@@ -3,19 +3,18 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Nav = styled.nav`
-    background: #f1f4f7;
-    padding: 8px 20px;
-    border-radius: 8px;
-    display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 `;
 
 const NavList = styled.ul`
-    display: flex;
+    display: inline-flex;
     gap: 10px;
     font-size: 14px;
     text-transform: capitalize;
     align-items: center;
+    background: #f1f4f7;
+    padding: 8px 20px;
+    border-radius: 8px;
 `;
 
 const StyledLink = styled(Link)`

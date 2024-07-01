@@ -6,11 +6,12 @@ import CabinRow from './CabinRow';
 
 const Table = styled.div`
     border: 1px solid var(--color-grey-200);
-
+    margin-top: 20px;
     font-size: 1.4rem;
     background-color: var(--color-grey-0);
     border-radius: 7px;
     overflow: hidden;
+    margin-bottom: 30px;
 `;
 
 const TableHeader = styled.header`
@@ -29,21 +30,18 @@ const TableHeader = styled.header`
 `;
 
 const CabinTable = () => {
-    const { data: cabinsData, isPending } = useQuery(
-        { 
-            queryKey: ['cabins'], 
-            queryFn: getCabins 
-        }
-    );
+    const { data: cabinsData, isPending } = useQuery({
+        queryKey: ['cabins'],
+        queryFn: getCabins,
+    });
 
-    if(isPending) {
-        return <Spinner/>
+    if (isPending) {
+        return <Spinner />;
     }
 
-
     return (
-        <Table role='table'>
-            <TableHeader role='row'>
+        <Table role="table">
+            <TableHeader role="row">
                 <div>Cabin</div>
                 <div>Image</div>
                 <div>Capacity</div>
@@ -51,11 +49,9 @@ const CabinTable = () => {
                 <div>Discount</div>
                 <div></div>
             </TableHeader>
-            {
-                cabinsData?.map(cabin => (
-                    <CabinRow key={cabin.id} cabin={cabin}/>
-                ))
-            }
+            {cabinsData?.map((cabin) => (
+                <CabinRow key={cabin.id} cabin={cabin} />
+            ))}
         </Table>
     );
 };
