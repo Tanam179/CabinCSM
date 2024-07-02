@@ -8,10 +8,9 @@ import CreateCabinForm from '../features/cabins/CreateCabinForm';
 function Cabins() {
     const [showFormAddNewCabin, setShowFormAddNewCabin] = useState(false);
 
-    const handleShowFormAddNewCabin = function() {
+    const handleShowFormAddNewCabin = function () {
         setShowFormAddNewCabin(true);
-    }
-
+    };
 
     return (
         <Fragment>
@@ -23,8 +22,10 @@ function Cabins() {
                 <CabinTable></CabinTable>
             </Row>
             <Row type="horizontal">
-                <Button onClick={handleShowFormAddNewCabin}>Add New Cabin</Button>
-                { showFormAddNewCabin && <CreateCabinForm/> }
+                <Button onClick={handleShowFormAddNewCabin}>
+                    Add New Cabin
+                </Button>
+                {showFormAddNewCabin && <CreateCabinForm />}
             </Row>
         </Fragment>
     );
