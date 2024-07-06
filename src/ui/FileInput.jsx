@@ -1,8 +1,16 @@
 import styled from 'styled-components';
 
-const FileInput = styled.input`
+const FileInput = styled.input.attrs({ type: 'file' })`
     font-size: 1.4rem;
     border-radius: var(--border-radius-sm);
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
 
     &::file-selector-button {
         font: inherit;

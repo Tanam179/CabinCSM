@@ -3,16 +3,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Dashboard from '../pages/Dashboard';
-import Bookings from '../pages/Bookings';
-import Cabins from '../pages/Cabins';
-import NewUsers from '../pages/Users';
-import Settings from '../pages/Settings';
-import Account from '../pages/Account';
-import Login from '../pages/Login';
-import PageNotFound from '../pages/PageNotFound';
-import GlobalStye from '../styles/GlobalStyle';
-import AppLayout from '../ui/AppLayout';
+import Dashboard from './pages/Dashboard';
+import Bookings from './pages/Bookings';
+import Cabins from './pages/Cabins';
+import NewUsers from './pages/Users';
+import Settings from './pages/Settings';
+import Account from './pages/Account';
+import Login from './pages/Login';
+import PageNotFound from './pages/PageNotFound';
+import AppLayout from './ui/AppLayout';
 
 const queryClient = new QueryClient();
 
@@ -20,7 +19,6 @@ const App = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
-            <GlobalStye />
             <BrowserRouter>
                 <Routes>
                     <Route element={<AppLayout />}>
@@ -48,7 +46,6 @@ const App = () => {
                     color: 'var(--color-grey-700)',
                     fontWeight: 500,
                 }}
-                
             />
         </QueryClientProvider>
     );

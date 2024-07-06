@@ -1,9 +1,9 @@
+import { Fragment, useState } from 'react';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
 import CabinTable from '../features/cabins/CabinTable';
-import { Fragment, useState } from 'react';
 import Button from '../ui/Button';
-import CreateCabinForm from '../features/cabins/CreateCabinForm';
+import CreateEditCabinForm from '../features/cabins/CreateEditCabinForm';
 
 function Cabins() {
     const [showFormAddNewCabin, setShowFormAddNewCabin] = useState(false);
@@ -25,7 +25,7 @@ function Cabins() {
                 <Button onClick={handleShowFormAddNewCabin}>
                     Add New Cabin
                 </Button>
-                {showFormAddNewCabin && <CreateCabinForm />}
+                {showFormAddNewCabin && <CreateEditCabinForm />}
             </Row>
         </Fragment>
     );
