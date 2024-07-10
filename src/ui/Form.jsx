@@ -1,6 +1,9 @@
 import styled, { css } from 'styled-components';
 
 const Form = styled.form`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
     ${(props) =>
         props.type !== 'modal' &&
         css`
@@ -16,6 +19,7 @@ const Form = styled.form`
         props.type === 'modal' &&
         css`
             width: 80rem;
+            padding: 0;
         `}
     
   overflow: hidden;

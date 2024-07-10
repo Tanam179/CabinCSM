@@ -47,7 +47,7 @@ const schema = yup
     })
     .required();
 
-function CreateEditCabinForm({ cabinToEdit = {} }) {
+function CreateEditCabinForm({ cabinToEdit = {}, onClose }) {
     const [imagePreview, setImagePreview] = useState('');
     const { id: canbinEditID, ...cabinEditValues } = cabinToEdit;
     const { image: cabinEditImage } = cabinToEdit;
@@ -82,15 +82,11 @@ function CreateEditCabinForm({ cabinToEdit = {} }) {
     const onSubmit = (data) => {
         const image = typeof data.image === 'string' ? data.image : data.image[0];
         if (isEditSession) {
-            editCabin({ newCabinData: { ...data, image }, id: canbinEditID }, { onSuccess: () => setImagePreview(null) });
+            editCabin({ newCabinData: { ...data, image }, id: canbinEditID }, { onSuccess: () => {setImagePreview(null); onClose()} });
         } else {
             addNewCabin({ ...data, image: image }, { onSuccess: () => reset()});
         }
 
-    };
-
-    const resetForm = function () {
-        reset();
     };
 
     const handleRemovePreivew = function () {
@@ -103,15 +99,14 @@ function CreateEditCabinForm({ cabinToEdit = {} }) {
     };
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
-            <h2 style={{ marginBottom: '1.8rem', color: 'var(--color-brand-600)' }}>
+        <Form type={onClose ? 'modal' : 'regular'} onSubmit={handleSubmit(onSubmit)}>
+            <h2 style={{ color: 'var(--color-brand-600)', width: '100%' }}>
                 {isEditSession ? `EDIT CABIN #${cabinToEdit.id}` : 'ADD NEW CABIN'}
             </h2>
-            <FormRow label="Cabin name" errors={errors.name || undefined}>
+            <FormRow size="half" label="Cabin name" errors={errors.name || undefined}>
                 <Input disabled={isLoading} err={errors.name} type="text" id="name" {...register('name')} />
             </FormRow>
-
-            <FormRow label="Maximum capacity" errors={errors.maxCapacity || undefined}>
+            <FormRow size="half" label="Maximum capacity" errors={errors.maxCapacity || undefined}>
                 <Input
                     disabled={isLoading}
                     err={errors.maxCapacity}
@@ -122,7 +117,7 @@ function CreateEditCabinForm({ cabinToEdit = {} }) {
                 />
             </FormRow>
 
-            <FormRow label="Regular price" errors={errors.regularPrice || undefined}>
+            <FormRow size="half" label="Regular price" errors={errors.regularPrice || undefined}>
                 <Input
                     disabled={isLoading}
                     err={errors.regularPrice}
@@ -133,7 +128,7 @@ function CreateEditCabinForm({ cabinToEdit = {} }) {
                 />
             </FormRow>
 
-            <FormRow label="discount" errors={errors.discount || undefined}>
+            <FormRow size="half" label="discount" errors={errors.discount || undefined}>
                 <Input
                     disabled={isLoading}
                     err={errors.discount}
@@ -144,11 +139,11 @@ function CreateEditCabinForm({ cabinToEdit = {} }) {
                 />
             </FormRow>
 
-            <FormRow label="Description for website" errors={errors.description || undefined}>
+            <FormRow size="full" label="Description for website" errors={errors.description || undefined}>
                 <Textarea disabled={isLoading} id="description" defaultValue="" {...register('description')} />
             </FormRow>
 
-            <FormRow label="Cabin photo" errors={errors?.image || null}>
+            <FormRow size="full" label="Cabin photo" errors={errors?.image || null}>
                 <FileInput
                     disabled={isLoading}
                     id="image"
@@ -182,7 +177,7 @@ function CreateEditCabinForm({ cabinToEdit = {} }) {
                         <img
                             src={imagePreview}
                             alt="preview"
-                            style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                            style={{ width: 'auto', height: '100px', borderRadius: '8px' }}
                         />
                         <Button
                             onClick={handleRemovePreivew}
@@ -198,7 +193,7 @@ function CreateEditCabinForm({ cabinToEdit = {} }) {
             </FormRow>
 
             <ButtonRow>
-                <Button onClick={resetForm} variation="secondary" type="reset">
+                <Button onClick={onClose} variation="secondary" type="reset">
                     Cancel
                 </Button>
                 <Button>{isEditSession ? 'Edit cabin' : 'Create new cabin'}</Button>

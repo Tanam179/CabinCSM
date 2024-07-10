@@ -1,31 +1,23 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
 import CabinTable from '../features/cabins/CabinTable';
-import Button from '../ui/Button';
-import CreateEditCabinForm from '../features/cabins/CreateEditCabinForm';
+import AddCabin from '../features/cabins/AddCabin';
+import CabinTableOperations from '../features/cabins/CabinTableOperations';
+
 
 function Cabins() {
-    const [showFormAddNewCabin, setShowFormAddNewCabin] = useState(false);
-
-    const handleShowFormAddNewCabin = function () {
-        setShowFormAddNewCabin(true);
-    };
-
     return (
         <Fragment>
             <Row type="horizontal">
                 <Heading as="h1">All cabins</Heading>
-                <p>Filter / Sort</p>
+                <CabinTableOperations/>
             </Row>
             <Row>
                 <CabinTable></CabinTable>
             </Row>
             <Row type="horizontal">
-                <Button onClick={handleShowFormAddNewCabin}>
-                    Add New Cabin
-                </Button>
-                {showFormAddNewCabin && <CreateEditCabinForm />}
+                <AddCabin/>
             </Row>
         </Fragment>
     );

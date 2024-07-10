@@ -1,9 +1,21 @@
 import BookingRow from './BookingRow';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
+import useBookings from '../../hooks/useBookings';
+import Empty from '../../ui/Empty';
+import Spinner from '../../ui/Spinner';
 
 function BookingTable() {
-    const bookings = [];
+    const { bookingsData, isLoading } = useBookings();
+
+    if(isLoading) {
+        return <Spinner/>
+    }
+
+    if(!bookingsData?.length && !isLoading) {
+        return <Empty resource="bookings"/>
+    }
+
 
     return (
         <Menus>
@@ -17,7 +29,7 @@ function BookingTable() {
                     <div></div>
                 </Table.Header>
 
-                <Table.Body data={bookings} render={(booking) => <BookingRow key={booking.id} booking={booking} />} />
+                <Table.Body data={bookingsData} render={(booking) => <BookingRow key={booking.id} booking={booking} />} />
             </Table>
         </Menus>
     );

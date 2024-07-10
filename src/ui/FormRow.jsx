@@ -1,11 +1,21 @@
 /* eslint-disable react/prop-types */
-import styled from "styled-components";
+import styled, { css } from 'styled-components';
 
 const StyledFormRow = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
-    width: 600px;
+    ${(props) =>
+        props.size === 'full' &&
+        css`
+            width: 100%;
+        `};
+    ${(props) =>
+        props.size === 'half' &&
+        css`
+            width: calc(50% - 10px);
+        `};
+
     padding: 1.2rem 0;
 
     &:first-child {
@@ -37,11 +47,11 @@ const Error = styled.span`
     font-weight: 600;
 `;
 
-const FormRow = ({ label, errors, children }) => {
+const FormRow = ({ label, errors, children, size }) => {
     return (
-        <StyledFormRow>
-            <Label htmlFor={ label === 'Cabin photo' ? children[0].props.id : children.props.id}>{ label }</Label>
-            { children }
+        <StyledFormRow size={size}>
+            <Label htmlFor={label === 'Cabin photo' ? children[0].props.id : children.props.id}>{label}</Label>
+            {children}
             {errors && <Error>{errors.message}</Error>}
         </StyledFormRow>
     );

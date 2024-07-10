@@ -1,25 +1,27 @@
 /* eslint-disable react/prop-types */
-import { Fragment, useState } from 'react';
 import styled from 'styled-components';
 
 import { formatCurrency } from '../../utils/helpers';
-import Button from '../../ui/Button';
 import CreateEditCabinForm from './CreateEditCabinForm';
 import useDeleteCabin from '../../hooks/useDeleteCabin';
 import { HiMiniPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
 import useCreateCabin from '../../hooks/useCreateCabin';
+import Modal from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+import Table from '../../ui/Table';
+import Menus from '../../ui/Menus';
 
-const TableRow = styled.div`
-    display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1.5fr 1.5fr 1fr 1fr;
-    column-gap: 2.4rem;
-    align-items: center;
-    padding: 1.4rem 2.4rem;
+// const TableRow = styled.div`
+//     display: grid;
+//     grid-template-columns: 1.5fr 1.5fr 1.5fr 1.5fr 1fr 1fr;
+//     column-gap: 2.4rem;
+//     align-items: center;
+//     padding: 1.4rem 2.4rem;
 
-    &:not(:last-child) {
-        border-bottom: 1px solid var(--color-grey-100);
-    }
-`;
+//     &:not(:last-child) {
+//         border-bottom: 1px solid var(--color-grey-100);
+//     }
+// `;
 
 const Img = styled.img`
     display: block;
@@ -49,56 +51,88 @@ const Discount = styled.div`
 `;
 
 const CabinRow = ({ cabin }) => {
-    const [showForm, setShowForm] = useState(false);
     const { isPending, mutate } = useDeleteCabin();
-    const { addNewCabin, isAdding } = useCreateCabin();
+    const { addNewCabin } = useCreateCabin();
 
-    const handleShowForm = function () {
-        setShowForm(true);
+    const handleDuplicate = function () {
+        addNewCabin({
+            name: `Copy of ${cabin.name}`,
+            maxCapacity: cabin.maxCapacity,
+            regularPrice: cabin.regularPrice,
+            discount: cabin.discount,
+            image: cabin.image,
+            description: cabin.description,
+        });
     };
 
-    const handleDuplicate = function() {
-        addNewCabin(
-            { 
-                name: `Copy of ${cabin.name}`,
-                maxCapacity: cabin.maxCapacity,
-                regularPrice: cabin.regularPrice,
-                discount: cabin.discount,
-                image: cabin.image,
-                description: cabin.description,
-            }
-        )
-    }
-
     return (
-        <Fragment>
-            <TableRow role="role">
-                <Cabin>{cabin.name}</Cabin>
-                <Img
-                    src={
-                        cabin.image
-                            ? cabin.image
-                            : 'https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg'
-                    }
-                    alt={cabin.name}
-                />
-                <div>Fits up to {cabin.maxCapacity} quest</div>
-                <Price>{formatCurrency(cabin.regularPrice)}</Price>
-                <Discount>{formatCurrency(cabin.discount)}</Discount>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
-                    <Button onClick={handleDuplicate} disabled={isPending || isAdding} variation="success" size="small">
-                        <HiSquare2Stack size={15} />
-                    </Button>
-                    <Button disabled={isPending} onClick={handleShowForm} variation="primary" size="small">
-                        <HiMiniPencil size={15} />
-                    </Button>
-                    <Button disabled={isPending} onClick={() => mutate(cabin.id)} variation="danger" size="small">
-                        <HiTrash size={15} />
-                    </Button>
-                </div>
-            </TableRow>
-            {showForm && <CreateEditCabinForm cabinToEdit={cabin} />}
-        </Fragment>
+        <Table.Row role="role">
+            <Cabin>{cabin.name}</Cabin>
+            <Img
+                src={
+                    cabin.image
+                        ? cabin.image
+                        : 'https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg'
+                }
+                alt={cabin.name}
+            />
+            <div>Fits up to {cabin.maxCapacity} quest</div>
+            <Price>{formatCurrency(cabin.regularPrice)}</Price>
+            <Discount>{formatCurrency(cabin.discount)}</Discount>
+            <div>
+                {/* <Modal>
+                    <Modal.Open opens="edit-cabin">
+                        <button disabled={isPending}>
+                            <HiMiniPencil size={15} />
+                        </button>
+                    </Modal.Open>
+                    <Modal.Window name="edit-cabin">
+                        <CreateEditCabinForm cabinToEdit={cabin} />
+                    </Modal.Window>
+
+                    <Modal.Open opens="delete-cabin">
+                        <button disabled={isPending}>
+                            <HiTrash size={15} />
+                        </button>
+                    </Modal.Open>
+                    <Modal.Window name="delete-cabin">
+                        <ConfirmDelete
+                            resourceName={`Cabin ${cabin.name}`}
+                            disabled={isPending}
+                            onConfirm={() => mutate(cabin.id)}
+                        />
+                    </Modal.Window>
+                </Modal> */}
+                <Menus.Menu>
+                    <Modal>
+                        <Menus.Toggle id={cabin.id}></Menus.Toggle>
+                        <Menus.List id={cabin.id}>
+                            <Menus.Button onClick={handleDuplicate} icon={<HiSquare2Stack size={15} />}>
+                                Duplicate
+                            </Menus.Button>
+
+                            <Modal.Open opens="edit-cabin">
+                                <Menus.Button icon={<HiMiniPencil size={15} />}>Edit</Menus.Button>
+                            </Modal.Open>
+
+                            <Modal.Open opens="delete-cabin">
+                                <Menus.Button icon={<HiTrash size={15} />}>Delete</Menus.Button>
+                            </Modal.Open>
+                        </Menus.List>
+                        <Modal.Window name="edit-cabin">
+                            <CreateEditCabinForm cabinToEdit={cabin} />
+                        </Modal.Window>
+                        <Modal.Window name="delete-cabin">
+                            <ConfirmDelete
+                                resourceName={`Cabin ${cabin.name}`}
+                                disabled={isPending}
+                                onConfirm={() => mutate(cabin.id)}
+                            />
+                        </Modal.Window>
+                    </Modal>
+                </Menus.Menu>
+            </div>
+        </Table.Row>
     );
 };
 

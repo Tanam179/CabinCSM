@@ -1,6 +1,11 @@
+/* eslint-disable react/prop-types */
+import { createContext, useContext, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { HiEllipsisVertical } from 'react-icons/hi2';
 import styled from 'styled-components';
+import useClickOutside from '../hooks/useClickOutside';
 
-const StyledMenu = styled.div`
+const Menu = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -60,3 +65,72 @@ const StyledButton = styled.button`
         transition: all 0.3s;
     }
 `;
+
+const MenusContext = createContext();
+
+const Menus = ({ children }) => {
+    const [openId, setOpenId] = useState(null);
+    const [position, setPosition] = useState(null);
+
+    const close = function() {
+        setOpenId(null);
+    }
+
+    const open = setOpenId
+
+    return (
+        <MenusContext.Provider value={{ openId, open, close, position, setPosition }}>
+            {children}
+        </MenusContext.Provider>
+    );
+};
+
+const Toggle = function({ id }) {
+    const { open, close, openId, setPosition } = useContext(MenusContext);
+
+    const handleClick = function(e) {
+        const rect = e.target.closest('button').getBoundingClientRect();
+        setPosition({ x: window.innerWidth - rect.width - rect.x, y: rect.y + rect.height + 8 - window.scrollY });
+        if(openId === null || openId !== id) {
+            open(id);
+        } else {
+            close()
+        }
+    }
+
+    return <StyledToggle onClick={handleClick}>
+        <HiEllipsisVertical/>
+    </StyledToggle>
+}
+
+const List = function({ id, children }) {
+    const { openId, position, close } = useContext(MenusContext);
+    const { modalContentRef } = useClickOutside(close);
+    if(openId !== id) return null;
+    return createPortal(
+        <StyledList ref={modalContentRef} position={position}>{ children }</StyledList>,
+        document.body
+    )
+}
+
+const Button = function({ children, icon, onClick }) {
+    const { close } = useContext(MenusContext);
+
+    const handleClick = function() {
+        onClick?.();
+        close()
+    }
+
+    return (
+        <li>
+            <StyledButton onClick={handleClick} >{ icon } <span>{children}</span></StyledButton>
+        </li>
+    )
+}
+
+Menus.Menu = Menu;
+Menus.Toggle = Toggle;
+Menus.List = List;
+Menus.Button = Button;
+
+export default Menus;
