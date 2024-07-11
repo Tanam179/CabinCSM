@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styled from 'styled-components';
 import { format, isToday } from 'date-fns';
 import {
@@ -100,7 +101,7 @@ const Footer = styled.footer`
 `;
 
 // A purely presentational component
-function BookingDataBox({ booking }) {
+function BookingDataBox({ booking = {} }) {
     const {
         created_at,
         startDate,
@@ -113,9 +114,11 @@ function BookingDataBox({ booking }) {
         hasBreakfast,
         observations,
         isPaid,
-        guests: { fullName: guestName, email, country, countryFlag, nationalID },
-        cabins: { name: cabinName },
+        guests,
+        cabins,
     } = booking;
+
+    console.log(booking);
 
     return (
         <StyledBookingDataBox>
@@ -123,7 +126,7 @@ function BookingDataBox({ booking }) {
                 <div>
                     <HiOutlineHomeModern />
                     <p>
-                        {numNights} nights in Cabin <span>{cabinName}</span>
+                        {numNights} nights in Cabin <span>{cabins?.name}</span>
                     </p>
                 </div>
 
@@ -136,14 +139,14 @@ function BookingDataBox({ booking }) {
 
             <Section>
                 <Guest>
-                    {countryFlag && <Flag src={countryFlag} alt={`Flag of ${country}`} />}
+                    {guests?.countryFlag && <Flag src={guests?.countryFlag} alt={`Flag of ${guests?.country}`} />}
                     <p>
-                        {guestName} {numGuests > 1 ? `+ ${numGuests - 1} guests` : ''}
+                        {guests?.fullName} {numGuests > 1 ? `+ ${numGuests - 1} guests` : ''}
                     </p>
                     <span>&bull;</span>
-                    <p>{email}</p>
+                    <p>{guests?.email}</p>
                     <span>&bull;</span>
-                    <p>National ID {nationalID}</p>
+                    <p>National ID {guests?.nationalID}</p>
                 </Guest>
 
                 {observations && (

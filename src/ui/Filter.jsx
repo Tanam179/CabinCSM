@@ -44,6 +44,7 @@ const Filter = ({ filterField, options }) => {
 
     const handleClick = function(value) {
         searchParams.set(filterField, value);
+        searchParams.delete('page')
         setSearchParams(searchParams)
     }
 

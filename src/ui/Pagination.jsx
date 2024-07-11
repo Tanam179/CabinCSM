@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledPagination = styled.div`
@@ -5,6 +7,16 @@ const StyledPagination = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+`;
+
+const Select = styled.select`
+    font-size: 1.4rem;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid ${(props) => (props.type === 'white' ? 'var(--color-grey-100)' : 'var(--color-grey-300)')};
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-grey-0);
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
 `;
 
 const P = styled.p`
@@ -54,3 +66,41 @@ const PaginationButton = styled.button`
         color: var(--color-brand-50);
     }
 `;
+
+
+const Pagination = ({ count, numbDataPerPage, onChange }) => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const currentPage = searchParams.get('page') || 1;
+
+    
+
+    const handleClick = function(page) {
+        searchParams.set('page', page);
+        setSearchParams(searchParams)
+    }
+
+    return (
+        <StyledPagination>
+            <P>
+                Showing <span>{ (currentPage - 1) * numbDataPerPage + 1 }</span> to <span>{ count - (currentPage - 1) * numbDataPerPage + 1 < numbDataPerPage ? count : currentPage * numbDataPerPage }</span> of <span>{ count }</span> results
+            </P>
+            <Select defaultValue={numbDataPerPage} onChange={(e) => onChange(e.target.value)}>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </Select>
+            <Buttons>
+                {
+                    Array.from({ length: Math.ceil(count / numbDataPerPage) }).fill(null).map((el, ind) => (
+                        <PaginationButton disabled={ currentPage === ind + 1 } onClick={() => handleClick(ind + 1)} active={ ind + 1 == currentPage } key={ind}>{ ind + 1 }</PaginationButton>
+                    ))
+                }
+            </Buttons>
+        </StyledPagination>
+    );
+};
+
+export default Pagination;

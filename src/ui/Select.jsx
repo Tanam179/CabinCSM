@@ -19,6 +19,7 @@ const Select = ({ options }) => {
 
     const handleChange = function(e) {
         searchParams.set('sortBy', e.target.value);
+        searchParams.delete('page');
         setSearchParams(searchParams);
     }
 

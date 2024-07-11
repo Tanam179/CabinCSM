@@ -2,9 +2,9 @@ import { getToday } from '../utils/helpers';
 import supabase from './supabase';
 
 export async function getBookings({ queryKey }) {
-    const [, { filterValue, sortByValue }] = queryKey;
+    const [, { filterValue, sortByValue, currentPage, numberDataPerPage }] = queryKey;
 
-    let query = supabase.from('bookings').select('id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)');
+    let query = supabase.from('bookings').select("id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(*), guests(*)", { count: 'exact' });
 
     if(filterValue !== 'all') {
         query = query.eq('status', filterValue);
@@ -14,20 +14,25 @@ export async function getBookings({ queryKey }) {
         const [field, direction] = sortByValue.split('-');
         query = query.order(field, { ascending: direction === 'asc' });         
 
+    } else {
+        query = query.order('id', { ascending: false });   
     }
 
-    const { data, error } = await query
+    query = query.range(numberDataPerPage * (currentPage - 1), (numberDataPerPage * currentPage) - 1);
+
+    const { data, error, count } = await query
     
     if (error) {
         console.error(error);
         throw new Error('Bookings could not get loaded');
     }
 
-    return data;
+    return {data, count};
 }
 
-export async function getBooking(id) {
-    const { data, error } = await supabase.from('bookings').select('*, cabins(*), guests(*)').eq('id', id).single();
+export async function getBooking({ queryKey }) {
+    const [, { bookingId }] = queryKey;
+    const { data, error } = await supabase.from('bookings').select('*, cabins(*), guests(*)').eq('id', bookingId).single();
 
     if (error) {
         console.error(error);

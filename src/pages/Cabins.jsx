@@ -9,7 +9,7 @@ import CabinTableOperations from '../features/cabins/CabinTableOperations';
 function Cabins() {
     return (
         <Fragment>
-            <Row type="horizontal">
+            <Row type="horizontal" style={{ marginBottom: 20 }}>
                 <Heading as="h1">All cabins</Heading>
                 <CabinTableOperations/>
             </Row>
