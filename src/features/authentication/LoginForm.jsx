@@ -1,19 +1,32 @@
 import { useState } from 'react';
-import Button from '../../ui/Button';
-import Form from '../../ui/Form';
 import Input from '../../ui/Input';
+import Button from '../../ui/Button';
+import FormCol from '../../ui/FormCol';
+import useLogin from '../../hooks/useLogin';
+import SpinnerMini from '../../ui/SpinnerMini';
 import FormRowVertical from '../../ui/FormRowVertical';
 
 function LoginForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('tasnam@gmail.com');
+    const [password, setPassword] = useState('12345678');
+    const { login, isPending } = useLogin();
 
-    function handleSubmit() {}
+    async function handleSubmit(e) {
+        e.preventDefault();
+        if (!email || !password) return;
+        login({ email, password }, {
+            onSettled() {
+                setEmail('');
+                setPassword('');
+            }
+        });
+    }
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <FormCol onSubmit={handleSubmit}>
             <FormRowVertical label="Email address">
                 <Input
+                    disabled={isPending}
                     type="email"
                     id="email"
                     // This makes this form better for password managers
@@ -24,6 +37,7 @@ function LoginForm() {
             </FormRowVertical>
             <FormRowVertical label="Password">
                 <Input
+                    disabled={isPending}
                     type="password"
                     id="password"
                     autoComplete="current-password"
@@ -32,9 +46,11 @@ function LoginForm() {
                 />
             </FormRowVertical>
             <FormRowVertical>
-                <Button size="large">Login</Button>
+                <Button disabled={isPending} size="large">
+                    {isPending ? <SpinnerMini /> : 'Login'}
+                </Button>
             </FormRowVertical>
-        </Form>
+        </FormCol>
     );
 }
 

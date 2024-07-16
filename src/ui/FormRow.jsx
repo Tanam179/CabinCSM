@@ -1,60 +1,50 @@
 /* eslint-disable react/prop-types */
-import styled, { css } from 'styled-components';
+import styled from "styled-components";
 
 const StyledFormRow = styled.div`
+  display: grid;
+  align-items: center;
+  grid-template-columns: 24rem 1fr 1.2fr;
+  gap: 2.4rem;
+
+  padding: 1.2rem 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-grey-100);
+  }
+
+  &:has(button) {
     display: flex;
-    flex-direction: column;
+    justify-content: flex-end;
     gap: 1.2rem;
-    ${(props) =>
-        props.size === 'full' &&
-        css`
-            width: 100%;
-        `};
-    ${(props) =>
-        props.size === 'half' &&
-        css`
-            width: calc(50% - 10px);
-        `};
-
-    padding: 1.2rem 0;
-
-    &:first-child {
-        padding-top: 0;
-    }
-
-    &:last-child {
-        padding-bottom: 0;
-    }
-
-    &:not(:last-child) {
-        border-bottom: 1px solid var(--color-grey-100);
-    }
-
-    &:has(button) {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1.2rem;
-    }
+  }
 `;
 
 const Label = styled.label`
-    font-weight: 500;
+  font-weight: 500;
 `;
 
 const Error = styled.span`
-    font-size: 1.2rem;
-    color: var(--color-red-700);
-    font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--color-red-700);
 `;
 
-const FormRow = ({ label, errors, children, size }) => {
+function FormRow({ label, errors, children }) {
     return (
-        <StyledFormRow size={size}>
-            <Label htmlFor={label === 'Cabin photo' ? children[0].props.id : children.props.id}>{label}</Label>
+        <StyledFormRow>
+            <Label htmlFor={label === 'Cabin photo' ? children[0].props.id : children?.props?.id}>{label}</Label>
             {children}
             {errors && <Error>{errors.message}</Error>}
         </StyledFormRow>
     );
-};
+}
 
 export default FormRow;

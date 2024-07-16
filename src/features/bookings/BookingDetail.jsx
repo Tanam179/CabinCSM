@@ -13,6 +13,10 @@ import { useMoveBack } from '../../hooks/useMoveBack';
 import useBooking from '../../hooks/useBooking';
 import Spinner from '../../ui/Spinner';
 import { useCheckout } from '../../hooks/useCheckout';
+import Modal from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+import { HiTrash } from 'react-icons/hi2';
+import useDeleteBooking from '../../hooks/useDeleteBooking';
 
 const HeadingGroup = styled.div`
     display: flex;
@@ -25,6 +29,7 @@ function BookingDetail() {
     const { checkout } = useCheckout();
     const navigate = useNavigate();
     const moveBack = useMoveBack();
+    const { mutate } = useDeleteBooking();
 
     const statusToTagName = {
         unconfirmed: 'blue',
@@ -51,17 +56,21 @@ function BookingDetail() {
             <BookingDataBox booking={booking} />
 
             <ButtonGroup style={{ marginTop: 30 }}>
-                {status === 'unconfirmed' && (
-                    <Button
-                        onClick={() => navigate(`/checkin/${booking.id}`)}
-                    >
-                        Check in
+                <Modal>
+                    {status === 'unconfirmed' && (
+                        <Button onClick={() => navigate(`/checkin/${booking.id}`)}>Check in</Button>
+                    )}
+                    {status === 'checked-in' && <Button onClick={() => checkout(booking.id)}>Check out</Button>}
+                    <Modal.Open opens="delete-booking">
+                        <Button variation="danger" icon={<HiTrash size={15} />}>Delete booking</Button>
+                    </Modal.Open>
+                    <Modal.Window name="delete-booking">
+                        <ConfirmDelete onConfirm={() => mutate(booking.id, { onSuccess: () => navigate('/bookings') })} resourceName={`booking #${booking.id}`} />
+                    </Modal.Window>
+                    <Button variation="secondary" onClick={moveBack}>
+                        Back
                     </Button>
-                )}
-                { status === 'checked-in' && <Button onClick={() => checkout(booking.id)}>Check out</Button>}
-                <Button variation="secondary" onClick={moveBack}>
-                    Back
-                </Button>
+                </Modal>
             </ButtonGroup>
         </>
     );

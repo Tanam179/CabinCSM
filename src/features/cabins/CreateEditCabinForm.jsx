@@ -152,26 +152,6 @@ function CreateEditCabinForm({ cabinToEdit = {}, onClose }) {
                     {...register('image')}
                     onChange={(e) => setImagePreview(URL.createObjectURL(e.target.files[0]))}
                 />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <label
-                        style={{
-                            display: 'inline-block',
-                            padding: '1.2rem 1.6rem',
-                            cursor: 'pointer',
-                            background: 'var(--color-brand-600)',
-                            color: '#fff',
-                            borderRadius: '5px',
-                        }}
-                        role="button"
-                        htmlFor="image"
-                        type="button"
-                    >
-                        Choose file
-                    </label>
-                    <span>
-                        {imagePreview ? '1 file has been choosen' : 'No file choosen! Click button to choose new file'}
-                    </span>
-                </div>
                 {imagePreview && (
                     <div style={{ position: 'relative' }}>
                         <img
